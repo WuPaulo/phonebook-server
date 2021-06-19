@@ -65,9 +65,11 @@ app.get("/api/persons", (request, response) => {
 
 app.get("/api/info", (request, response) => {
   const date = new Date(Date.now());
-  response.send(
-    `<p> Phonebook has info for ${persons.length} people </p> <p> ${date}</p>`
-  );
+  Person.find({}).then((result) => {
+    response.send(
+      `<p> Phonebook has info for ${result.length} people </p> <p> ${date}</p>`
+    );
+  });
 });
 
 app.get("/api/persons/:id", (request, response, next) => {
@@ -94,6 +96,19 @@ const generateId = () => {
   const maxID = persons.length > 0 ? Math.max(...persons.map((n) => n.id)) : 0;
   return maxID + 1;
 };
+
+app.put("/api/persons/:id", (request, response, next) => {
+  const body = request.body;
+  const person = {
+    number: body.number,
+  };
+
+  Person.findByIdAndUpdate(request.params.id, person, { new: true })
+    .then((updatedPerson) => {
+      response.json(updatedPerson);
+    })
+    .catch((error) => next(error));
+});
 
 app.post("/api/persons", (request, response) => {
   const body = request.body;
