@@ -92,10 +92,7 @@ app.delete("/api/persons/:id", (request, response, next) => {
     .catch((error) => next(error));
 });
 
-const generateId = () => {
-  const maxID = persons.length > 0 ? Math.max(...persons.map((n) => n.id)) : 0;
-  return maxID + 1;
-};
+
 
 app.put("/api/persons/:id", (request, response, next) => {
   const body = request.body;
